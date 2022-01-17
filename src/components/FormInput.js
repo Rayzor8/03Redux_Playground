@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { addUsers } from '../features/users/usersSlice';
 
@@ -9,13 +9,39 @@ const FormInput = () => {
       age: '',
    });
 
+   const refs = {
+      name: useRef(),
+      age: useRef(),
+   };
+
    const dispatch = useDispatch();
 
    const handleSubmit = (e) => {
+
       e.preventDefault();
+
+
+      if (formInput.name === '' && formInput.age === '') {
+         refs.name.current.focus();
+         return;
+      }
+
+      if (formInput.name && formInput.age === '') {
+         refs.age.current.focus();
+         return;
+      }
+
+      if (formInput.age && formInput.name === '') {
+         refs.name.current.focus();
+         return;
+      }
+
       dispatch(
          addUsers({
-            id: userList[userList.length - 1].id + 1,
+            id:
+               userList.length > 0
+                  ? userList[userList.length - 1].id + 1
+                  : userList.length + 1,
             name: formInput.name,
             age: formInput.age,
          })
@@ -33,6 +59,7 @@ const FormInput = () => {
                Username
             </label>
             <input
+               ref={refs.name}
                type="text"
                name="userName"
                className="py-1 rounded text-slate-900 px-2"
@@ -48,6 +75,7 @@ const FormInput = () => {
                Age
             </label>
             <input
+               ref={refs.age}
                type="number"
                name="age"
                className="py-1 rounded text-slate-900 px-2"

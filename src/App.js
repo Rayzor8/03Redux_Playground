@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import FormInput from './components/FormInput';
 import { useDispatch } from 'react-redux';
 import { editStatus } from './features/users/usersSlice';
+import { deleteUser } from './features/users/usersSlice';
+import EditForm from './components/EditForm';
 
 function App() {
    const userList = useSelector((state) => state.users.value);
@@ -12,7 +14,7 @@ function App() {
    const showEditHandler = (id) => {
       const findEl = userList.find((el) => el.id === id);
       dispatch(editStatus(findEl.id));
-   }
+   };
 
    return (
       <div className="App bg-slate-900 text-white w-full min-h-screen p-2 lg:p-4 font-mono">
@@ -41,22 +43,16 @@ function App() {
                         >
                            Edit
                         </button>
-                        <button className="bg-red-500 py-1 lg:py-0 px-2 rounded text-xs lg:text-lg">
+                        <button
+                           className="bg-red-500 py-1 lg:py-0 px-2 rounded text-xs lg:text-lg"
+                           onClick={() => dispatch(deleteUser(user.id))}
+                        >
                            Delete
                         </button>
                      </div>
 
                      {user.edit && (
-                        <div className="flex justify-center items-center gap-4 bg-slate-700 py-2 px-2 lg:px-0">
-                           <input
-                              type="text"
-                              placeholder="Edit here.."
-                              className="px-2 rounded"
-                           />
-                           <button className="bg-yellow-400 py-1 lg:py-0 px-2 rounded text-xs lg:text-lg">
-                              Confirm Edit
-                           </button>
-                        </div>
+                        <EditForm userId={user.id}/>
                      )}
                   </div>
                ))}
